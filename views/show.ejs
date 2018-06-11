@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Simple Blog</title>
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.3.1/semantic.min.css" type="text/css" rel="stylesheet">
+        <link rel="stylesheet" type="text/css" href="/stylesheets/show.css">
+    </head>
+    <body>
+        <div class="topnav">
+          <a href="/posts">Home</a>
+          <a href="#">Come funziona?</a>
+          <a href="/posts/new">Crea un post</a>
+          <a href="#" style="float: right">Registrati</a>
+          <a href="#" style="float: right">Accedi</a>
+        </div>
+        <div class="leftContent">
+            <img src="<%= post.image %>">
+        </div>
+        <div class="rightContent">
+            <h1><%= post.title %></h1>
+            <p><%= post.description %></p>
+            <p>Creato da: <strong>autore</strong></p>
+                <a href="/posts/<%= post._id %>/edit" class="ui positive button">Modifica</a>
+                <form action="/posts/<%= post._id %>?_method=delete" method="post">
+                    <button class="ui negative button">Cancella</button>
+                </form>
+        </div>
+    </body>
+</html>
