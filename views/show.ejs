@@ -24,7 +24,12 @@
                 <% post.comments.forEach(function(comment){ %>
                     <div class="commento">
                         <p class="ui top attached block header">Autore<span style="float: right">Creato 10 ore</span></p>
-                        <p class="ui bottom attached segment"><%= comment.text %></p>
+                        <div class="ui bottom attached segment">
+                            <p><%= comment.text %></p>
+                            <form style="display: inline" action="/posts/<%= post._id %>/comment/<%= comment._id %>?_method=delete" method="post">
+                                <button class="ui mini negative button">Cancella</button>
+                            </form>
+                        </div>
                     </div>
                 <% }) %>
             </div>

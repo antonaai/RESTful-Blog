@@ -134,6 +134,22 @@ app.post("/posts/:id/comment", function(req, res){
     });
 });
 
+//DELETE ROUTE
+app.delete("/posts/:id/comment/:commentid", function(req, res) {
+    Post.findById(req.params.id, function(err, foundPost) {
+        if(err)
+            console.log(err);
+        else {
+            Comment.findByIdAndRemove(req.params.commentid, function(err, comment){
+                if(err)
+                    console.log(err);
+                else 
+                    return res.redirect("/posts/" + req.params.id);
+            });
+        }
+    });
+});
+
 //LISTENER
 app.listen(process.env.PORT, process.env.IP, function(){
     console.log("BLOG ONLINE");
