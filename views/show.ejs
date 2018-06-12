@@ -16,6 +16,18 @@
         </div>
         <div class="leftContent">
             <img src="<%= post.image %>">
+            <form class="ui action input" action="/posts/<%= post._id %>/comment" method="post">
+                <input type="text" name="text" placeholder="A cosa stai pensando?">
+                <button class="ui primary button">Invia</button>
+            </form>
+            <div class="commenti">
+                <% post.comments.forEach(function(comment){ %>
+                    <div class="commento">
+                        <p class="ui top attached block header">Autore<span style="float: right">Creato 10 ore</span></p>
+                        <p class="ui bottom attached segment"><%= comment.text %></p>
+                    </div>
+                <% }) %>
+            </div>
         </div>
         <div class="rightContent">
             <h1><%= post.title %></h1>

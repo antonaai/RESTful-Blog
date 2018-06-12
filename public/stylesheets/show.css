@@ -41,3 +41,21 @@
 .rightContent form {
   display: inline;
 }
+
+.leftContent form {
+  margin-top: 5%;
+  width: 100%;
+}
+
+.leftContent input {
+  width: 80%;
+}
+
+.commenti {
+  width: 100%;
+}
+
+.commento {
+  margin-top: 2%;
+  line-height: 2em;
+}

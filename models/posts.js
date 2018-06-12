@@ -3,7 +3,13 @@ var mongoose = require("mongoose");
 var postSchema = new mongoose.Schema({
     title: String,
     description: String,
-    image: String
+    image: String,
+    comments: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Comment"
+        }
+    ]
     //author: String
 });
 

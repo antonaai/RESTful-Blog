@@ -4,6 +4,7 @@ var mongoose = require("mongoose");
 var bodyParser = require("body-parser");
 var methodOverride = require("method-override");
 var Post = require("./models/posts.js");
+var Comment = require("./models/comments.js");
 
 // connecting the app to the database
 mongoose.connect("mongodb://localhost/new-blog");
@@ -66,7 +67,7 @@ app.post("/posts/new", function(req, res){
 
 //READ ROUTE
 app.get("/posts/:id", function(req, res){
-   Post.findById(req.params.id, function(err, foundPost){
+   Post.findById(req.params.id).populate("comments").exec(function(err, foundPost){
        if(err){
            console.log(err);
            res.send("404 - PAGE NOT FOUND");
@@ -109,6 +110,29 @@ app.delete("/posts/:id", function(req, res){
     });
 });
 
+
+//COMMENT ROUTES --------------------------------------------------
+
+//NEW ROUTE
+app.post("/posts/:id/comment", function(req, res){
+    Post.findById(req.params.id, function(err, foundPost){
+        if(err) {
+            console.log(err);
+            res.redirect("/posts");
+        } else {
+            Comment.create({text: req.body.text}, function(err, newComment){
+                if(err)
+                    console.log(err);
+                else {
+                    newComment.save();
+                    foundPost.comments.push(newComment);
+                    foundPost.save();
+                    return res.redirect("/posts/" + req.params.id);
+                }
+            });
+        }
+    });
+});
 
 //LISTENER
 app.listen(process.env.PORT, process.env.IP, function(){
