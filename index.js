@@ -180,6 +180,16 @@ app.post("/register", function(req, res) {
     });
 });
 
+//LOGIN ROUTE
+app.get("/login", function(req, res) {
+    res.render("login.ejs");
+});
+
+app.post("/login", passport.authenticate("local", {
+    successRedirect: "/posts",
+    failureRedirect: "/login"
+}), function(req, res){});
+
 //LISTENER
 app.listen(process.env.PORT, process.env.IP, function(){
     console.log("BLOG ONLINE");
