@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Simple Blog</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.3.1/semantic.min.css" type="text/css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="./stylesheets/register.css">
+  </head>
+  <body>
+    <div class="registrazione">
+        <h1>Registrati!</h1>
+        <form class="ui form" action="/register" method="post">
+            <div class="field">
+                <label>Nome:</label>
+                <input type="text" name="name" placeholder="Il tuo nome">
+            </div>
+            <div class="field">
+                <label>Cognome:</label>
+                <input type="text" name="surname" placeholder="Il tuo cognome">
+            </div>
+
+            <div class="field">
+                <label>Username:</label>
+                <input type="text" name="username" placeholder="scegli un username">
+            </div>
+            <div class="field">
+                <label>Password:</label>
+                <input type="password" name="password" placeholder="scegli una password">
+            </div>
+            <button style="margin-left: 37%" class="ui button">Invia!</button>
+        </form>
+    </div>
+  </body>
+</html>

@@ -78,14 +78,6 @@ body{
     clear: both;
 }
 
-/* Footer */
-.footer {
-    padding: 20px;
-    text-align: center;
-    background: #ddd;
-    margin-top: 20px;
-}
-
 #aboutImg {
   background-image: url("https://images.pexels.com/photos/459688/pexels-photo-459688.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940");
   background-size: cover;

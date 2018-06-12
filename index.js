@@ -3,6 +3,9 @@ var app = express();
 var mongoose = require("mongoose");
 var bodyParser = require("body-parser");
 var methodOverride = require("method-override");
+var passport = require("passport");
+var localStrategy = require("passport-local");
+var User = require("./models/user.js");
 var Post = require("./models/posts.js");
 var Comment = require("./models/comments.js");
 
@@ -14,16 +17,19 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.static("public"));
 app.use(methodOverride("_method"));
 
-// Post.create({
-//     title: "A new style",
-//     description: "Sunt in culpa qui officia deserunt mollit anim id est laborum consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco.",
-//     image: "https://images.pexels.com/photos/432059/pexels-photo-432059.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
-// }, function(err, post){
-//     if(err)
-//         console.log(err);
-//     else 
-//         console.log(post);
-// });
+//PASSPORT CONFIGURATION
+app.use(require("express-session")({
+    secret: "Breakday",
+    resave: false,
+    saveUninitialized: false
+}));
+
+app.use(passport.initialize());
+app.use(passport.session());
+passport.use(new localStrategy(User.authenticate()));
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
+
 
 // RESTFUL ROUTES -- CRUD
 
@@ -147,6 +153,30 @@ app.delete("/posts/:id/comment/:commentid", function(req, res) {
                     return res.redirect("/posts/" + req.params.id);
             });
         }
+    });
+});
+
+//USER ROUTES ------------------------------------------------------------------------
+//REGISTER FORM ROUTE
+app.get("/register", function(req, res) {
+    res.render("register.ejs");
+});
+
+//SIGN UP ROUTE
+app.post("/register", function(req, res) {
+    var newUser = new User({
+        username: req.body.username,
+        name: req.body.name,
+        surname: req.body.surname
+    });
+    User.register(newUser, req.body.password, function(err, user){
+        if(err){
+            console.log(err);
+            return res.redirect("/register");
+        }
+        passport.authenticate("local")(req, res, function(){
+            res.redirect("/posts");
+        });
     });
 });
 

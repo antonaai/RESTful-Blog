@@ -1,0 +1,25 @@
+body, html {
+    margin: 0;
+    padding: 0;
+    background: #16A085;  /* fallback for old browsers */
+    background: -webkit-linear-gradient(to right, #F4D03F, #16A085);  /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to right, #F4D03F, #16A085); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+
+}
+
+.registrazione {
+    width: 30%;
+    background: white;
+    padding: 50px;
+    position: absolute;
+    top: 15%;
+    left: 34.5%;
+}
+
+.registrazione h1 {
+    text-align: center;
+}
+
+.registrazione button{
+    margin-left: 35%;
+}
