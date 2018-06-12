@@ -9,10 +9,14 @@
     <body>
         <div class="topnav">
           <a href="/posts">Home</a>
-          <a href="#">Come funziona?</a>
           <a href="/posts/new">Crea un post</a>
-          <a href="#" style="float: right">Registrati</a>
-          <a href="#" style="float: right">Accedi</a>
+          <% if(!currentUser){ %>
+              <a href="/register" style="float: right">Registrati</a>
+              <a href="/login" style="float: right">Accedi</a>
+          <% } else { %>
+              <a href="/logout" style="float: right">Esci</a>
+              <a style="float: right"><%= currentUser.username %></a>
+          <% } %>
         </div>
         <div class="leftContent">
             <img src="<%= post.image %>">

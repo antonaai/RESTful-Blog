@@ -30,7 +30,10 @@ passport.use(new localStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
-
+app.use(function(req, res, next){
+    res.locals.currentUser = req.user;
+    next();
+});
 // RESTFUL ROUTES -- CRUD
 
 //POSTS ROUTES
@@ -53,11 +56,11 @@ app.get("/posts", function(req, res){
 });
 
 //CREATE ROUTES
-app.get("/posts/new", function(req, res){
+app.get("/posts/new", isLoggedIn, function(req, res){
     res.render("new.ejs");
 });
 
-app.post("/posts/new", function(req, res){
+app.post("/posts/new", isLoggedIn, function(req, res){
     Post.create({
         title: req.body.title,
         image: req.body.image,
@@ -120,7 +123,7 @@ app.delete("/posts/:id", function(req, res){
 //COMMENT ROUTES --------------------------------------------------
 
 //NEW ROUTE
-app.post("/posts/:id/comment", function(req, res){
+app.post("/posts/:id/comment", isLoggedIn, function(req, res){
     Post.findById(req.params.id, function(err, foundPost){
         if(err) {
             console.log(err);
@@ -189,6 +192,20 @@ app.post("/login", passport.authenticate("local", {
     successRedirect: "/posts",
     failureRedirect: "/login"
 }), function(req, res){});
+
+//LOGOUT ROUTE
+app.get("/logout", function(req, res) {
+    req.logout();
+    res.redirect("/posts");
+});
+
+//MIDDLEWARES
+function isLoggedIn(req, res, next){
+    if(req.isAuthenticated())
+        return next();
+    else 
+        res.redirect("/login");
+}
 
 //LISTENER
 app.listen(process.env.PORT, process.env.IP, function(){
