@@ -35,7 +35,7 @@
             <div class="commenti">
                 <% post.comments.forEach(function(comment){ %>
                     <div class="commento">
-                        <p class="ui top attached block header"><%= comment.author.username %><span style="float: right">Creato 10 ore</span></p>
+                        <p class="ui top attached block header"><%= comment.author.username %><span style="float: right"><%= moment(comment.createdAt).fromNow() %></span></p>
                         <div class="ui bottom attached segment">
                             <p><%= comment.text %></p>
                             <form style="display: inline" action="/posts/<%= post._id %>/comment/<%= comment._id %>?_method=delete" method="post">
@@ -51,7 +51,7 @@
         <div class="rightContent">
             <h1><%= post.title %></h1>
             <p><%= post.description %></p>
-            <p>Creato da: <strong><%= post.author.username %></strong></p>
+            <p>Creato da: <strong><%= post.author.username %>, <%= moment(post.createdAt).fromNow() %></strong></p>
                 <% if(currentUser && post.author.id.equals(currentUser._id)){ %>
                     <a href="/posts/<%= post._id %>/edit" class="ui positive button">Modifica</a>
                     <form action="/posts/<%= post._id %>?_method=delete" method="post">

@@ -26,7 +26,7 @@
         <% posts.forEach(function(post){ %>
           <div class="card">
             <h2><%= post.title %></h2>
-            <h5>Creato il Dec 7, 2017</h5>
+            <h5><em>Creato da: <%= post.author.username %>, <%= moment(post.createdAt).fromNow() %></em></h5>
             <img class="fakeimg" style="height:200p" src="<%= post.image %>">
             <p><%= post.description %></p>
             <a class="ui yellow button" href="/posts/<%= post._id %>">Scopri di più</a>
