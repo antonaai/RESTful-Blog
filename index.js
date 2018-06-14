@@ -5,7 +5,6 @@ var bodyParser = require("body-parser");
 var methodOverride = require("method-override");
 var passport = require("passport");
 var localStrategy = require("passport-local");
-var flash = require("connect-flash");
 var User = require("./models/user.js");
 var Post = require("./models/posts.js");
 var Comment = require("./models/comments.js");
@@ -17,7 +16,6 @@ mongoose.connect("mongodb://localhost/new-blog");
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.static("public"));
 app.use(methodOverride("_method"));
-app.use(flash());
 
 //PASSPORT CONFIGURATION
 app.use(require("express-session")({
@@ -34,8 +32,6 @@ passport.deserializeUser(User.deserializeUser());
 
 app.use(function(req, res, next){
     res.locals.currentUser = req.user;
-    res.locals.error = req.flash("error");
-    res.locals.success = req.flash("success");
     next();
 });
 // RESTFUL ROUTES -- CRUD
@@ -73,7 +69,6 @@ app.post("/posts/new", isLoggedIn, function(req, res){
         if(err){
             res.redirect("/posts/new");
         } else {
-            req.flash("success", "Post creato con successo");
             res.redirect("/posts");
         }
     });
@@ -120,7 +115,6 @@ app.delete("/posts/:id", function(req, res){
         if(err)
             console.log(err);
         else {
-            req.flash("success", "Goodbye post!");
             res.redirect("/posts");
         }
     });
@@ -160,7 +154,6 @@ app.delete("/posts/:id/comment/:commentid", function(req, res) {
                 if(err)
                     console.log(err);
                 else {
-                    req.flash("success", "Addio commento!");
                     return res.redirect("/posts/" + req.params.id);
                 }
             });
@@ -187,7 +180,6 @@ app.post("/register", function(req, res) {
             return res.redirect("/register");
         }
         passport.authenticate("local")(req, res, function(){
-            req.flash("success", "Benvenuto fra noi!!!");
             res.redirect("/posts");
         });
     });
@@ -214,12 +206,10 @@ function isLoggedIn(req, res, next){
     if(req.isAuthenticated())
         return next();
     else {
-        req.flash("error", "Devi essere iscritto per poterlo fare");
         res.redirect("/login");
     }
 }
 
-<<<<<<< HEAD
 function checkCommentOwnership(req, res, next){
     if(req.isAuthenticated()){
         Comment.findById(req.params.commentid, function(err, foundComment){
@@ -227,20 +217,17 @@ function checkCommentOwnership(req, res, next){
                 res.redirect("/posts");
             } else {
                 if(!foundComment){
-                    req.flash("error", "Commento non trovato! Prova più tardi");
                     return res.redirect("/posts");
                 }
                 //does the user own the comment
                 if(foundComment.author.id.equals(req.user._id)){
                     next();
                 } else {
-                    req.flash("error", "Non sei il proprietario di questo commento");
                     res.redirect("/posts");
                 }
             }
         });
     } else {
-        req.flash("error", "Devi essere iscritto per poterlo fare");
         res.redirect("/login");
     }
 }
@@ -253,26 +240,22 @@ function checkPostOwnership(req, res, next){
                res.redirect("/posts");
            } else {
                if(!foundPost){
-                   req.flash("error", "Post non trovato, riprova più tardi");
                    return res.redirect("/posts");
                }
                //SECOND CHECK IF THE USER OWNS THE POST
                if(foundPost.author.id.equals(req.user._id)){
                    next();
                } else {
-                   req.flash("error", "Non sei il proprietario di questo post!");
                    res.redirect("/posts");
                }
            }
         });
     } else {    
-        req.flash("error", "Devi essere iscritto per poterlo fare");
         res.redirect("/login");
     }
 }
 
-=======
->>>>>>> parent of 1039477... Added comment and posts authorization
+
 //LISTENER
 app.listen(process.env.PORT, process.env.IP, function(){
     console.log("BLOG ONLINE");
