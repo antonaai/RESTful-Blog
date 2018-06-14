@@ -5,6 +5,7 @@ var bodyParser = require("body-parser");
 var methodOverride = require("method-override");
 var passport = require("passport");
 var localStrategy = require("passport-local");
+var flash = require("connect-flash");
 var User = require("./models/user.js");
 var Post = require("./models/posts.js");
 var Comment = require("./models/comments.js");
@@ -16,6 +17,7 @@ mongoose.connect("mongodb://localhost/new-blog");
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.static("public"));
 app.use(methodOverride("_method"));
+app.use(flash());
 
 //PASSPORT CONFIGURATION
 app.use(require("express-session")({
@@ -32,6 +34,8 @@ passport.deserializeUser(User.deserializeUser());
 
 app.use(function(req, res, next){
     res.locals.currentUser = req.user;
+    res.locals.error = req.flash("error");
+    res.locals.success = req.flash("success");
     next();
 });
 // RESTFUL ROUTES -- CRUD
@@ -117,8 +121,10 @@ app.delete("/posts/:id", checkPostOwnership, function(req, res){
     Post.findByIdAndRemove(req.params.id, function(err){
         if(err)
             console.log(err);
-        else
+        else {
+            req.flash("success", "Goodbye post");
             res.redirect("/posts");
+        }
     });
 });
 
@@ -159,8 +165,10 @@ app.delete("/posts/:id/comment/:commentid", checkCommentOwnership, function(req,
             Comment.findByIdAndRemove(req.params.commentid, function(err, comment){
                 if(err)
                     console.log(err);
-                else 
+                else {
+                    req.flash("success", "Commento cancellato");
                     return res.redirect("/posts/" + req.params.id);
+                }
             });
         }
     });
@@ -185,6 +193,7 @@ app.post("/register", function(req, res) {
             return res.redirect("/register");
         }
         passport.authenticate("local")(req, res, function(){
+            req.flash("success", "Benvenuto/a !!!");
             res.redirect("/posts");
         });
     });
@@ -210,28 +219,34 @@ app.get("/logout", function(req, res) {
 function isLoggedIn(req, res, next){
     if(req.isAuthenticated())
         return next();
-    else 
+    else {
+        req.flash("error", "Devi essere iscritto per poterlo fare");
         res.redirect("/login");
+    }
 }
 
 function checkCommentOwnership(req, res, next){
     if(req.isAuthenticated()){
         Comment.findById(req.params.commentid, function(err, foundComment){
             if(err){
+                req.flash("error", "Commento non trovato riprova più tardi");  
                 res.redirect("/posts");
             } else {
                 if(!foundComment){
+                    req.flash("error", "Commento non trovato riprova più tardi");
                     return res.redirect("/posts");
                 }
                 //does the user own the comment
                 if(foundComment.author.id.equals(req.user._id)){
                     next();
                 } else {
+                    req.flash("error", "Non sei il proprietario di questo commento");
                     res.redirect("/posts");
                 }
             }
         });
     } else {
+        req.flash("error", "Devi essere iscritto per poterlo fare");
         res.redirect("/login");
     }
 }
@@ -241,17 +256,24 @@ function checkPostOwnership(req, res, next){
     if(req.isAuthenticated()){
         Post.findById(req.params.id, function(err, foundPost){
            if(err){
+               req.flash("error", "Post non trovato!");
                res.redirect("/posts");
            } else {
+               if(!foundPost){
+                   req.flash("error", "Post non trovato");
+                   return res.redirect("/posts");
+               }
                //SECOND CHECK IF THE USER OWNS THE POST
                if(foundPost.author.id.equals(req.user._id)){
                    next();
                } else {
+                   req.flash("error", "Non sei il proprietario di questo post");
                    res.redirect("/posts");
                }
            }
         });
     } else {
+        req.flash("error", "Devi essere iscritto per poterlo fare");
         res.redirect("/login");
     }
 }
