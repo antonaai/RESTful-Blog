@@ -40,7 +40,8 @@ app.use(function(req, res, next){
 });
 // RESTFUL ROUTES -- CRUD
 
-//POSTS ROUTES -----------------------------------------------------------------
+//POSTS ROUTES
+
 //INTIAL ROUTES
 app.get("/", function(req, res) {
     res.redirect("/posts");
@@ -67,11 +68,7 @@ app.post("/posts/new", isLoggedIn, function(req, res){
     Post.create({
         title: req.body.title,
         image: req.body.image,
-        description: req.body.description,
-        author: {
-            id: req.user._id,
-            username: req.user.username
-        }
+        description: req.body.description
     }, function(err, newPost){
         if(err){
             res.redirect("/posts/new");
@@ -95,7 +92,7 @@ app.get("/posts/:id", function(req, res){
 });
 
 //UPDATE ROUTES
-app.get("/posts/:id/edit", checkPostOwnership, function(req, res){
+app.get("/posts/:id/edit", function(req, res){
    Post.findById(req.params.id, function(err, foundPost){
        if(err){
            console.log(err);
@@ -106,7 +103,7 @@ app.get("/posts/:id/edit", checkPostOwnership, function(req, res){
    });
 });
 
-app.put("/posts/:id", checkPostOwnership, function(req, res){
+app.put("/posts/:id", function(req, res){
     Post.findByIdAndUpdate(req.params.id, req.body.post, function(err, updatedPost){
         if(err){
             console.log(err);
@@ -118,7 +115,7 @@ app.put("/posts/:id", checkPostOwnership, function(req, res){
 });
 
 //DESTROY ROUTE
-app.delete("/posts/:id", checkPostOwnership, function(req, res){
+app.delete("/posts/:id", function(req, res){
     Post.findByIdAndRemove(req.params.id, function(err){
         if(err)
             console.log(err);
@@ -130,7 +127,7 @@ app.delete("/posts/:id", checkPostOwnership, function(req, res){
 });
 
 
-//COMMENT ROUTES ---------------------------------------------------------------
+//COMMENT ROUTES --------------------------------------------------
 
 //NEW ROUTE
 app.post("/posts/:id/comment", isLoggedIn, function(req, res){
@@ -143,10 +140,6 @@ app.post("/posts/:id/comment", isLoggedIn, function(req, res){
                 if(err)
                     console.log(err);
                 else {
-                    //add username and id to comment
-                    newComment.author.id = req.user._id;
-                    newComment.author.username = req.user.username;
-                    //save comment
                     newComment.save();
                     foundPost.comments.push(newComment);
                     foundPost.save();
@@ -158,7 +151,7 @@ app.post("/posts/:id/comment", isLoggedIn, function(req, res){
 });
 
 //DELETE ROUTE
-app.delete("/posts/:id/comment/:commentid", checkCommentOwnership, function(req, res) {
+app.delete("/posts/:id/comment/:commentid", function(req, res) {
     Post.findById(req.params.id, function(err, foundPost) {
         if(err)
             console.log(err);
@@ -175,7 +168,7 @@ app.delete("/posts/:id/comment/:commentid", checkCommentOwnership, function(req,
     });
 });
 
-//USER ROUTES ------------------------------------------------------------------
+//USER ROUTES ------------------------------------------------------------------------
 //REGISTER FORM ROUTE
 app.get("/register", function(req, res) {
     res.render("register.ejs");
@@ -216,7 +209,7 @@ app.get("/logout", function(req, res) {
     res.redirect("/posts");
 });
 
-//MIDDLEWARES ------------------------------------------------------------------
+//MIDDLEWARES
 function isLoggedIn(req, res, next){
     if(req.isAuthenticated())
         return next();
@@ -226,6 +219,7 @@ function isLoggedIn(req, res, next){
     }
 }
 
+<<<<<<< HEAD
 function checkCommentOwnership(req, res, next){
     if(req.isAuthenticated()){
         Comment.findById(req.params.commentid, function(err, foundComment){
@@ -277,6 +271,8 @@ function checkPostOwnership(req, res, next){
     }
 }
 
+=======
+>>>>>>> parent of 1039477... Added comment and posts authorization
 //LISTENER
 app.listen(process.env.PORT, process.env.IP, function(){
     console.log("BLOG ONLINE");
