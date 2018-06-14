@@ -9,8 +9,14 @@ var postSchema = new mongoose.Schema({
             type: mongoose.Schema.Types.ObjectId,
             ref: "Comment"
         }
-    ]
-    //author: String
+    ],
+    author: {
+        id: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "User"
+        },
+        username: String
+    }
 });
 
 module.exports = mongoose.model("Post", postSchema);
