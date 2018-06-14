@@ -3,6 +3,10 @@
     <head>
         <meta charset="utf-8">
         <title>Simple Blog</title>
+        <!-- jQuery cdn -->
+         <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+         <!-- Bootstrap css cdn-->
+         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
         <link href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.3.1/semantic.min.css" type="text/css" rel="stylesheet">
         <link rel="stylesheet" type="text/css" href="/stylesheets/show.css">
     </head>
@@ -18,6 +22,18 @@
               <a style="float: right"><%= currentUser.username %></a>
           <% } %>
         </div>
+        
+            <% if(error && error.length > 0){ %>
+              <div class="alert alert-danger" role="alert">
+                <%= error %>
+              </div>
+            <% } %>
+            <% if(success && success.length > 0){ %>
+              <div class="alert alert-success" role="alert">
+                <%= success %>
+              </div>
+            <% } %>
+
         <div class="leftContent">
             <img src="<%= post.image %>">
             <form class="ui action input" action="/posts/<%= post._id %>/comment" method="post">
