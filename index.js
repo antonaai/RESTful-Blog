@@ -11,8 +11,8 @@ var Post = require("./models/posts.js");
 var Comment = require("./models/comments.js");
 
 // connecting the app to the database
-// mongoose.connect("mongodb://localhost/new-blog");
-mongoose.connect("mongodb://anton66:password66@ds161790.mlab.com:61790/new-blog");
+var url = process.env.DATABASEURL || "mongodb://localhost/new-blog";
+mongoose.connect(url);
 
 //APP CONFIGURATION
 app.use(bodyParser.urlencoded({extended: true}));
