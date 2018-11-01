@@ -1,6 +1,6 @@
 # RESTful-Blog
 
-- Un blog con routes che rispettano la metodologia RESTful
-- Ogni utente puo registrarsi al blog, creare un post, commentare il suo post o i post di altri
-- Utilizzo di moment.js per indicare quando è stato creato un post o un commento
-- Visita il sito <a href="https://pure-dusk-49683.herokuapp.com/posts">qui</a>
+- A blog with routes created following the RESTful convention 
+- Every user can register to the blog, create a post, comment other users' post
+- Use moment.js to indicate when the post/comment was created
+- Check the site <a href="https://pure-dusk-49683.herokuapp.com/posts">here</a>
